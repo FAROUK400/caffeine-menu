@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17130f">
+<title>CAFFEINE — Menu</title>
+<style>
+:root{--bg:#17130f;--panel:#211b15;--cream:#f5ead8;--muted:#b9a991;--gold:#d8a45b;--line:#403326}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#34251a 0,#17130f 48%);color:var(--cream);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:26px 18px 60px}
+header{text-align:center;padding:28px 12px 24px;border-bottom:1px solid var(--line)}
+.logo{width:68px;height:68px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;color:var(--gold);font-size:30px}
+.kicker{letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-size:11px}
+h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(42px,9vw,68px);letter-spacing:.12em;margin:8px 0}
+.subtitle{color:var(--muted);font-size:13px;letter-spacing:.08em}
+.tools{position:sticky;top:0;z-index:2;background:#17130fee;backdrop-filter:blur(12px);padding:16px 0 12px}
+.search{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 15px;color:var(--cream);font-size:15px;outline:none}
+.tabs{display:flex;gap:8px;overflow:auto;padding:12px 0 3px;scrollbar-width:none}.tabs button{white-space:nowrap;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:30px;padding:9px 14px;font-size:13px}.tabs button.active{background:var(--gold);border-color:var(--gold);color:#21170d;font-weight:700}
+.section-title{display:flex;align-items:center;gap:12px;margin:27px 0 12px}.section-title h2{font:500 25px Georgia,serif;margin:0}.section-title:after{content:"";height:1px;background:var(--line);flex:1}
+.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{background:linear-gradient(145deg,#292118,#201a14);border:1px solid var(--line);border-radius:16px;padding:16px;min-height:105px;display:flex;justify-content:space-between;gap:12px}
+.item h3{font-size:15px;margin:0 0 6px;font-weight:650}.item p{font-size:12px;color:var(--muted);margin:0;line-height:1.45}.price{color:var(--gold);font-weight:700;white-space:nowrap;font-size:14px;padding-top:2px}
+.note{text-align:center;color:var(--muted);font-size:11px;margin-top:36px;line-height:1.7}
+.empty{display:none;text-align:center;color:var(--muted);padding:30px}
+@media(max-width:560px){.items{grid-template-columns:1fr}.wrap{padding-inline:15px}.item{min-height:92px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="logo">☕</div>
+ <div class="kicker">Coffee • Drinks • Moments</div>
+ <h1>CAFFEINE</h1>
+ <div class="subtitle">NOTRE MENU</div>
+</header>
+<div class="tools">
+ <input class="search" id="search" type="search" placeholder="Rechercher une boisson…">
+ <nav class="tabs" id="tabs">
+  <button class="active" data-cat="all">Tout</button>
+  <button data-cat="Cafés">Cafés</button>
+  <button data-cat="Boissons froides">Boissons froides</button>
+  <button data-cat="Thés">Thés</button>
+  <button data-cat="Milkshakes">Milkshakes</button>
+ </nav>
+</div>
+<main id="menu"></main>
+<div class="empty" id="empty">Aucun résultat trouvé.</div>
+<footer class="note">CAFFEINE · Merci de votre visite<br>Les prix sont affichés en dinars tunisiens (DT).</footer>
+</div>
+<script>
+/* MODIFIE LES NOMS, DESCRIPTIONS ET PRIX DANS CETTE LISTE */
+const products = [
+ {cat:"Cafés",name:"Espresso",desc:"Café court et intense",price:"À compléter"},
+ {cat:"Cafés",name:"Direct",desc:"Café classique",price:"À compléter"},
+ {cat:"Cafés",name:"Capucin",desc:"Café et mousse de lait",price:"À compléter"},
+ {cat:"Cafés",name:"Cappuccino",desc:"Espresso, lait chaud et mousse",price:"À compléter"},
+ {cat:"Cafés",name:"Café crème",desc:"Café doux avec crème de lait",price:"À compléter"},
+ {cat:"Boissons froides",name:"Eau minérale",desc:"Bien fraîche",price:"À compléter"},
+ {cat:"Boissons froides",name:"Jus frais",desc:"Préparé à la demande",price:"À compléter"},
+ {cat:"Boissons froides",name:"Citronnade",desc:"Fraîche et acidulée",price:"À compléter"},
+ {cat:"Thés",name:"Thé",desc:"Thé chaud",price:"À compléter"},
+ {cat:"Thés",name:"Thé aux amandes",desc:"Thé traditionnel aux amandes",price:"À compléter"},
+ {cat:"Milkshakes",name:"Milkshake chocolat",desc:"Lait frappé au chocolat",price:"À compléter"},
+ {cat:"Milkshakes",name:"Milkshake vanille",desc:"Lait frappé à la vanille",price:"À compléter"}
+];
+const menu=document.getElementById('menu'), search=document.getElementById('search'), empty=document.getElementById('empty');
+let category='all';
+function render(){
+ const q=search.value.trim().toLowerCase();
+ const filtered=products.filter(p=>(category==='all'||p.cat===category)&&(`${p.name} ${p.desc} ${p.cat}`).toLowerCase().includes(q));
+ menu.innerHTML='';
+ const cats=[...new Set(filtered.map(p=>p.cat))];
+ cats.forEach(cat=>{
+  const section=document.createElement('section');
+  const heading=document.createElement('div');heading.className='section-title';
+  const h=document.createElement('h2');h.textContent=cat;heading.appendChild(h);section.appendChild(heading);
+  const grid=document.createElement('div');grid.className='items';
+  filtered.filter(p=>p.cat===cat).forEach(p=>{
+   const card=document.createElement('article');card.className='item';
+   const info=document.createElement('div');const name=document.createElement('h3');name.textContent=p.name;
+   const desc=document.createElement('p');desc.textContent=p.desc;info.append(name,desc);
+   const price=document.createElement('div');price.className='price';price.textContent=p.price;
+   card.append(info,price);grid.appendChild(card);
+  });
+  section.appendChild(grid);menu.appendChild(section);
+ });
+ empty.style.display=filtered.length?'none':'block';
+}
+document.getElementById('tabs').addEventListener('click',e=>{
+ const b=e.target.closest('button[data-cat]');if(!b)return;
+ category=b.dataset.cat;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));render();
+});
+search.addEventListener('input',render);render();
+</script>
+</body></html>
