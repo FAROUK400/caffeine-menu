@@ -67,11 +67,12 @@ h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(42px,9vw,68px);lett
   <button data-cat="Boissons froides">Boissons froides</button>
   <button data-cat="Thés">Thés</button>
   <button data-cat="Milkshakes">Milkshakes</button>
+  <button data-cat="Crêpes">Crêpes</button>
  </nav>
 </div>
 <main id="menu"></main>
 <div class="empty" id="empty">Aucun résultat trouvé.</div>
-<footer class="note">CAFFEINE · Merci de votre visite<br>Les prix sont affichés en dinars tunisiens (DT).</footer>
+<footer class="note">CAFFEINE · Merci de votre visite<br>Les prix sont affichés en dinars tunisiens (DT). Les prix à confirmer seront validés au café.</footer>
 </div>
 
 <div class="cartbar">
@@ -86,26 +87,44 @@ h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(42px,9vw,68px);lett
   <label for="tableNo">Numéro de table</label>
   <input class="field" id="tableNo" type="text" inputmode="numeric" placeholder="Exemple : 5">
   <div class="total"><span>Total</span><span id="cartTotal">À confirmer</span></div>
-  <p class="hint" id="priceHint">Les prix ne sont pas encore renseignés. Ajoutez les prix dans la liste des produits pour calculer le total automatiquement.</p>
+  <p class="hint" id="priceHint">Certains prix restent à confirmer. Le total se calcule automatiquement pour les articles dont le prix est renseigné.</p>
   <button class="send" id="sendOrder">Commander sur WhatsApp</button>
  </div>
 </div>
 
 <script>
-/* MODIFIE LES PRIX ICI : remplace null par un nombre, exemple price: 2.5 */
+/* Prix en dinars tunisiens : 5.000 = 5,000 DT */
 const products = [
  {cat:"Cafés",name:"Espresso",desc:"Café court et intense",price:null,img:"https://images.unsplash.com/photo-1510602847861-f357a9332bbc?w=900"},
  {cat:"Cafés",name:"Direct",desc:"Café classique",price:null,img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900"},
+ {cat:"Cafés",name:"Americano",desc:"Café allongé",price:null,img:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900"},
  {cat:"Cafés",name:"Capucin",desc:"Café et mousse de lait",price:null,img:"https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=900"},
  {cat:"Cafés",name:"Cappuccino",desc:"Espresso, lait chaud et mousse",price:null,img:"https://images.unsplash.com/photo-1534778101976-62847782c213?w=900"},
  {cat:"Cafés",name:"Café crème",desc:"Café doux avec crème de lait",price:null,img:"https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=900"},
- {cat:"Boissons froides",name:"Eau minérale",desc:"Bien fraîche",price:null,img:"https://images.unsplash.com/photo-1523362628745-0c100150b504?w=900"},
- {cat:"Boissons froides",name:"Jus frais",desc:"Préparé à la demande",price:null,img:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=900"},
- {cat:"Boissons froides",name:"Citronnade",desc:"Fraîche et acidulée",price:null,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Eau minérale 1 L",desc:"Bien fraîche",price:2.000,img:"https://images.unsplash.com/photo-1523362628745-0c100150b504?w=900"},
+ {cat:"Boissons froides",name:"Ice Macchiato",desc:"Café glacé",price:5.000,img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900"},
+ {cat:"Boissons froides",name:"Ice Macchiato Caramel",desc:"Café glacé au caramel",price:6.000,img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900"},
+ {cat:"Boissons froides",name:"Jus de citron",desc:"Jus frais préparé à la demande",price:3.500,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Citronnade",desc:"Citronnade fraîche",price:null,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Jus d'orange",desc:"Jus frais",price:3.000,img:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=900"},
+ {cat:"Boissons froides",name:"Jus de fraise",desc:"Jus frais à la fraise",price:5.000,img:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=900"},
+ {cat:"Boissons froides",name:"Jus kiwi",desc:"Jus frais au kiwi",price:null,img:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=900"},
+ {cat:"Boissons froides",name:"Lait de poule",desc:"Boisson fraîche",price:7.000,img:"https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=900"},
+ {cat:"Boissons froides",name:"Americano glacé",desc:"Café américain glacé",price:4.000,img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900"},
+ {cat:"Boissons froides",name:"Virgin Mojito",desc:"Boisson fraîche à la menthe",price:4.000,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Strawberry Mojito",desc:"Mojito à la fraise",price:5.000,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Blueberry Mojito",desc:"Mojito aux myrtilles",price:5.000,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Piña Colada",desc:"Cocktail exotique",price:7.000,img:"https://images.unsplash.com/photo-1513558161293-captain?auto=format&fit=crop&w=900"},
+ {cat:"Boissons froides",name:"Canette",desc:"Boisson gazeuse",price:3.000,img:"https://images.unsplash.com/photo-1527960471264-932f39eb5846?w=900"},
  {cat:"Thés",name:"Thé",desc:"Thé chaud",price:null,img:"https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=900"},
  {cat:"Thés",name:"Thé aux amandes",desc:"Thé traditionnel aux amandes",price:null,img:"https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=900"},
  {cat:"Milkshakes",name:"Milkshake chocolat",desc:"Lait frappé au chocolat",price:null,img:"https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=900"},
- {cat:"Milkshakes",name:"Milkshake vanille",desc:"Lait frappé à la vanille",price:null,img:"https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=900"}
+ {cat:"Milkshakes",name:"Milkshake vanille",desc:"Lait frappé à la vanille",price:null,img:"https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=900"},
+ {cat:"Crêpes",name:"Crêpe Fromage",desc:"Crêpe salée au fromage",price:5.000,img:"https://images.unsplash.com/photo-1519676867240-f03562e64548?w=900"},
+ {cat:"Crêpes",name:"Crêpe Thon Fromage",desc:"Crêpe salée au thon et fromage",price:7.000,img:"https://images.unsplash.com/photo-1519676867240-f03562e64548?w=900"},
+ {cat:"Crêpes",name:"Crêpe Salée",desc:"Crêpe salée",price:5.000,img:"https://images.unsplash.com/photo-1519676867240-f03562e64548?w=900"},
+ {cat:"Crêpes",name:"Crêpe Nutella",desc:"Crêpe au Nutella",price:8.000,img:"https://images.unsplash.com/photo-1519676867240-f03562e64548?w=900"},
+ {cat:"Crêpes",name:"Crêpe Nutella Fruits Secs",desc:"Crêpe au Nutella et fruits secs",price:11.000,img:"https://images.unsplash.com/photo-1519676867240-f03562e64548?w=900"}
 ];
 const menu=document.getElementById('menu');
 const search=document.getElementById('search');
