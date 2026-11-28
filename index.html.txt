@@ -24,6 +24,7 @@ h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(42px,9vw,68px);lett
 .note{text-align:center;color:var(--muted);font-size:11px;margin-top:36px;line-height:1.7}
 .empty{display:none;text-align:center;color:var(--muted);padding:30px}
 @media(max-width:560px){.items{grid-template-columns:1fr}.wrap{padding-inline:15px}.item{min-height:92px}}
+.item{overflow:hidden}
 </style>
 </head>
 <body>
